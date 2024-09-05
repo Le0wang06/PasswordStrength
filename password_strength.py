@@ -40,9 +40,21 @@ def check_complexity(password):
         if each in string.punctuation:
             has_special = True
 
-
     return has_special and has_lower and has_digit and has_upper
 
+
+def anaylyze_password(password):
+    length_ok = check_length(password)
+    entropy_ok = calculate_entropy(password)
+    complexity_ok = check_complexity(password)
+    result = ""
+
+    if(length_ok and complexity_ok and entropy_ok > 3.0):
+        result = "Strong"
+    elif (length_ok and complexity_ok):
+        result = "Moderate"
+    
+        
 
 
 print("yay! code runs")
