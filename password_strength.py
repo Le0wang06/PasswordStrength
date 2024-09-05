@@ -21,3 +21,28 @@ def calculate_entropy(password):
 
 def check_length(password):
     return len(password) >=8 
+
+def check_complexity(password):
+    has_upper = False
+    has_lower = False
+    has_digit = False
+    has_special = False 
+
+    for each in password:
+        if(has_special and has_lower and has_digit and has_upper):
+            break
+        if(each.isupper()):
+            has_upper = True
+        if(each.islower()):
+            has_lower = True
+        if(each.isdigit()):
+            has_digit = True
+        if each in string.punctuation:
+            has_special = True
+
+
+    return has_special and has_lower and has_digit and has_upper
+
+
+
+print("yay! code runs")
