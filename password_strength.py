@@ -19,3 +19,5 @@ def calculate_entropy(password):
 
     return entropy
 
+def check_length(password):
+    return len(password) >=8 
