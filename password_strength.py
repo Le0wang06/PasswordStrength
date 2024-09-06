@@ -1,7 +1,8 @@
-import numpy as np # https://numpy.org/doc/2.1/user/basics.html
+import numpy as np
 import matplotlib.pyplot as plt #Matplotlib’s Pyplot module, used for creating plots and visualizations.
 import string
 import math #basic math library
+import request 
 
 def calculate_entropy(password):
     length = len(password)
@@ -53,7 +54,19 @@ def anaylyze_password(password):
         result = "Strong"
     elif (length_ok and complexity_ok):
         result = "Moderate"
-    
+    else:
+        result = "Weak"
+
+    return result
+
+def check_breach_password(passwor):
+    #this function is used to check if the password has been exposed in a breach
+    S_Hash_password = hashlib.sha1(password.encode('utf-8')).hexdigest().upper()
+
+    #hashlib.sha1(...) is an algroithm used to convert to byte encoded
+    #it will put it into "hash".
+
+    #encode.(...) convert string into bytes
         
 
 
