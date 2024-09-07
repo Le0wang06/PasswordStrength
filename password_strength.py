@@ -1,8 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt #Matplotlib’s Pyplot module, used for creating plots and visualizations.
 import string
+
 import math #basic math library
-import request 
+
+from flask import Flask, render_template, request
+import requests # creates HTTP
+import hashlib  # For creating the SHA-1 hash of the password
 
 def calculate_entropy(password):
     length = len(password)
@@ -59,30 +63,60 @@ def anaylyze_password(password):
 
     return result
 
-def check_breach_password(password):
-    #this function is used to check if the password has been exposed in a breach
-    S_Hash_password = hashlib.sha1(password.encode('utf-8')).hexdigest().upper()
+def check_password_breach(password):
+   
+    # Turn password into hash
+    sha1_password = hashlib.sha1(password.encode('utf-8')).hexdigest().upper()
+    #encode = convert into Byte
 
-    #hashlib.sha1(...) is an algroithm used to convert to byte encoded
-    #it will put it into "hash".
+    # Only take the first 5 digit
+    prefix = sha1_password[:5]
+    
+    # 
+    response = requests.get(f"https://api.pwnedpasswords.com/range/{prefix}")
+    
+    # (status code 200)
+    if response.status_code != 200:
+        raise RuntimeError(f"Error fetching data: {response.status_code}")
+        #raise just bring up an exception
 
-    #encode.(...) convert string into bytes
+    # split text line by line
+    hashes = (line.split(':') for line in response.text.splitlines())
 
-    #hexdigest() convert hash into something readable 
+    
+    # loop 
+    for suffix, count in hashes:
+        if sha1_password[5:] == suffix:  # Compare the remaining part of the hash
+            return True, int(count)  # Return True and the breach count if it was breached
+    
+    return False, 0
 
-    #reasoning for upper is beacuse 
+#THIS COULD BE USED TO CHECK YOUR CODE QUICKER USING CLI UI. DONT NEED TOOL OUTSIDE OF PYTHON
 
-    response = requests.get(f"https://api.pwnedpasswords.com/range/{sha1_password[:5]}")
-
-    #the URL endpoint allow u auery the api for the first 5 character "[:5]"
-
-    if response.status_code == 200:
-        hashes = response.text.splitlines()
-        for hash in hashes:
-            if hash.startswith(sha1_password[5:]):
-                return True
-    return False
+# def cli_ui():
+#     print("Welcome to the Password Breach Checker!")
+#     print("This tool checks if your password has been exposed in any known data breaches.")
+    
+#     while True:
+#         password = input("Enter a password to check (or type 'exit' to quit): ")
         
+#         if password.lower() == 'exit':
+#             print("Exiting the Password Breach Checker. Stay safe!")
+#             break
+        
+#         breached, count = check_password_breach(password)
+        
+#         if breached:
+#             print(f"WARNING: Your password has been exposed {count} times in data breaches.")
+#             print("It’s highly recommended to change this password immediately.")
+#             print("Suggestions for a strong password:\n"
+#                   "- Use at least 12 characters.\n"
+#                   "- Include uppercase and lowercase letters, numbers, and symbols.\n"
+#                   "- Avoid using common phrases or easily guessable words.")
+#         else:
+#             print("Good news! Your password has not been found in any known data breaches.")
+#         print()  
 
+# cli_ui()
 
-print("yay! code runs")
+app = Flask(__name__)
