@@ -59,7 +59,7 @@ def anaylyze_password(password):
 
     return result
 
-def check_breach_password(passwor):
+def check_breach_password(password):
     #this function is used to check if the password has been exposed in a breach
     S_Hash_password = hashlib.sha1(password.encode('utf-8')).hexdigest().upper()
 
@@ -67,6 +67,21 @@ def check_breach_password(passwor):
     #it will put it into "hash".
 
     #encode.(...) convert string into bytes
+
+    #hexdigest() convert hash into something readable 
+
+    #reasoning for upper is beacuse 
+
+    response = requests.get(f"https://api.pwnedpasswords.com/range/{sha1_password[:5]}")
+
+    #the URL endpoint allow u auery the api for the first 5 character "[:5]"
+
+    if response.status_code == 200:
+        hashes = response.text.splitlines()
+        for hash in hashes:
+            if hash.startswith(sha1_password[5:]):
+                return True
+    return False
         
 
 
