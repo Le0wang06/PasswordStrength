@@ -48,7 +48,7 @@ def check_complexity(password):
     return has_special and has_lower and has_digit and has_upper
 
 
-def anaylyze_password(password):
+def analyze_password(password):
     length_ok = check_length(password)
     entropy_ok = calculate_entropy(password)
     complexity_ok = check_complexity(password)
@@ -120,3 +120,23 @@ def check_password_breach(password):
 # cli_ui()
 
 app = Flask(__name__)
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        password = request.form['password']
+        breached, count = check_password_breach(password)
+        strength = analyze_password(password)
+        
+        if breached:
+            return render_template('result.html', breached=True, count=count, strength=strength)
+        else:
+            return render_template('result.html', breached=False, count=0, strength=strength)
+    
+    return render_template('index.html')
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+#http://127.0.0.1:5000 the web link always this on google 
