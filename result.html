@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Analysis Results</title>
+</head>
+<body>
+    <h1>Password Analysis Results</h1>
+    
+    <p>Password strength: {{ strength }}</p>
+    
+    {% if breached %}
+    <p>Your password has been breached {{ count }} times. Please change it immediately!</p>
+    {% else %}
+    <p>Good news! Your password has not been found in any known data breaches.</p>
+    {% endif %}
+    
+    <a href="/">Try another password</a>
+</body>
+</html>
