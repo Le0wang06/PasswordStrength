@@ -5,18 +5,30 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Password Analysis Results</title>
+    <script>
+        window.onload = function() {
+            const strength = localStorage.getItem('passwordStrength');
+            const breached = localStorage.getItem('passwordBreached') === 'true';
+            const count = localStorage.getItem('breachCount');
+
+            document.getElementById('strength').innerText = `Password strength: ${strength}`;
+            if (breached) {
+                document.getElementById('breachInfo').innerText = `Your password has been breached ${count} times. Please change it immediately!`;
+            } else {
+                document.getElementById('breachInfo').innerText = 'Good news! Your password has not been found in any known data breaches.';
+            }
+
+            // Clean up local storage
+            localStorage.removeItem('passwordStrength');
+            localStorage.removeItem('passwordBreached');
+            localStorage.removeItem('breachCount');
+        };
+    </script>
 </head>
 <body>
     <h1>Password Analysis Results</h1>
-    
-    <p>Password strength: {{ strength }}</p>
-    
-    {% if breached %}
-    <p>Your password has been breached {{ count }} times. Please change it immediately!</p>
-    {% else %}
-    <p>Good news! Your password has not been found in any known data breaches.</p>
-    {% endif %}
-    
+    <div id="strength"></div>
+    <div id="breachInfo"></div>
     <a href="/">Try another password</a>
 </body>
 </html>
