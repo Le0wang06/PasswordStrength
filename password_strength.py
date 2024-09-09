@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt #Matplotlib’s Pyplot module, used for creating plots and visualizations.
 import string
 
 import math #basic math library
@@ -18,14 +17,15 @@ def calculate_entropy(password):
         frequency[char] = frequency.get(char,0) + 1
     
     entropy = 0
-    for count in frequency.values():
-        probability = count / length
-        entropy -= probability * math.log2(probability)
+    for count in frequency.values(): #return the direct value in the dictionary "frequency"
 
+        probability = count / length # it will be the times the element repeats in the password divided by the total length 
+        entropy -= probability * math.log2(probability) #the log base two of a decimal will be negative which -= will make it positive
     return entropy
 
+
 def check_length(password):
-    return len(password) >=8 
+    return len(password) >=8  # long enough
 
 def check_complexity(password):
     has_upper = False
