@@ -5,10 +5,32 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Password Strength Checker</title>
+    <script>
+        async function analyzePassword() {
+            const password = document.getElementById('password').value;
+            const response = await fetch('/check_password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ password: password })
+            });
+
+            const data = await response.json();
+
+            // Store result in local storage to access on the result page
+            localStorage.setItem('passwordStrength', data.strength);
+            localStorage.setItem('passwordBreached', data.breached);
+            localStorage.setItem('breachCount', data.count);
+
+            // Redirect to result page
+            window.location.href = '/result';
+        }
+    </script>
 </head>
 <body>
     <h1>Password Strength Checker</h1>
-    <form method="POST" action="/">
+    <form onsubmit="event.preventDefault(); analyzePassword();">
         <label for="password">Enter Password:</label>
         <input type="password" id="password" name="password" required>
         <button type="submit">Check Password</button>
