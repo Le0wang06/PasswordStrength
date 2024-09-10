@@ -2,39 +2,97 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password Strength Checker</title>
-    <script>
-        async function analyzePassword() {
-            const password = document.getElementById('password').value;
-            const response = await fetch('/check_password', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ password: password })
-            });
+    <title>Password Analysis Results</title>
+    <style>
 
-            const data = await response.json();
+        #loadingBar{
 
-            // Store result in local storage to access on the result page
-            localStorage.setItem('passwordStrength', data.strength);
-            localStorage.setItem('passwordBreached', data.breached);
-            localStorage.setItem('breachCount', data.count);
-
-            // Redirect to result page
-            window.location.href = '/result';
+            display: block;
+            size: 100%;
+            background-color: #f3f3f3;
         }
+
+
+        #loadingBarInner{
+
+            width: 0;
+            height: 30px;
+            background-color: #4acf50;
+        }
+
+        #loadingText {
+
+            text-align: center;
+            padding: 10px;
+        }
+
+
+        #results{
+
+            display: none;
+        }
+
+
+    </style>
+
+    <!-- Start to upload the function from python-->
+    <script>
+        function showResults() {
+            const strength = localStorage.getItem('passwordStrength');
+            const breached = localStorage.getItem('passwordBreached') === 'true';
+            const count = localStorage.getItem('breachCount');
+
+            document.getElementById('strength').innerText = `Password strength: ${strength}`;
+            if (breached) {
+                document.getElementById('breachInfo').innerText = `Your password has been breached ${count} times. Please change it immediately!`;
+            } else {
+                document.getElementById('breachInfo').innerText = 'Good news! Your password has not been found in any known data breaches.';
+            }
+
+            // Clean up local storage
+            localStorage.removeItem('passwordStrength');
+            localStorage.removeItem('passwordBreached');
+            localStorage.removeItem('breachCount');
+        }
+
+        window.onload = function() {
+            const loadingBarInner = document.getElementById("loadingBarInner");
+            let width = 0;
+            
+            // Simulate loading bar progress for 3-4 seconds
+            const interval = setInterval(function() {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    
+                    // Hide loading bar and show results
+                    document.getElementById("loadingBar").style.display = "none";
+                    document.getElementById("results").style.display = "block";
+                    
+                    // Show the results
+                    showResults();
+                } else {
+                    width++;
+                    loadingBarInner.style.width = width + "%";
+                }
+            }, 20);  // Adjust this value for the duration (35ms for ~3.5 seconds)
+        };
     </script>
 </head>
 <body>
-    <h1>Password Strength Checker</h1>
-    <form onsubmit="event.preventDefault(); analyzePassword();">
-        <label for="password">Enter Password:</label>
-        <input type="password" id="password" name="password" required>
-        <button type="submit">Check Password</button>
-    </form>
-</body>
+    <h1>Password Analysis Results</h1>
+    <div id = "loadingBar">
+        <div id="loadingBarInner"></div>
+        <div id = "loadingText">Loading your password...</div>
+    
+    </div>
+    <div id = "results">    
+        <div id="strength"></div>
+        <div id="breachInfo"></div>
+        <a href="/">Try another password</a>
+    </div>
 
+</body>
 </html>
