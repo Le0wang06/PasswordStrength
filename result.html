@@ -4,31 +4,37 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password Analysis Results</title>
+    <title>Password Strength Checker</title>
     <script>
-        window.onload = function() {
-            const strength = localStorage.getItem('passwordStrength');
-            const breached = localStorage.getItem('passwordBreached') === 'true';
-            const count = localStorage.getItem('breachCount');
+        async function analyzePassword() {
+            const password = document.getElementById('password').value;
+            const response = await fetch('/check_password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ password: password })
+            });
 
-            document.getElementById('strength').innerText = `Password strength: ${strength}`;
-            if (breached) {
-                document.getElementById('breachInfo').innerText = `Your password has been breached ${count} times. Please change it immediately!`;
-            } else {
-                document.getElementById('breachInfo').innerText = 'Good news! Your password has not been found in any known data breaches.';
-            }
+            const data = await response.json();
 
-            // Clean up local storage
-            localStorage.removeItem('passwordStrength');
-            localStorage.removeItem('passwordBreached');
-            localStorage.removeItem('breachCount');
-        };
+            // Store result in local storage to access on the result page
+            localStorage.setItem('passwordStrength', data.strength);
+            localStorage.setItem('passwordBreached', data.breached);
+            localStorage.setItem('breachCount', data.count);
+
+            // Redirect to result page
+            window.location.href = '/result';
+        }
     </script>
 </head>
 <body>
-    <h1>Password Analysis Results</h1>
-    <div id="strength"></div>
-    <div id="breachInfo"></div>
-    <a href="/">Try another password</a>
+    <h1>Password Strength Checker</h1>
+    <form onsubmit="event.preventDefault(); analyzePassword();">
+        <label for="password">Enter Password:</label>
+        <input type="password" id="password" name="password" required>
+        <button type="submit">Check Password</button>
+    </form>
 </body>
+
 </html>
