@@ -63,9 +63,10 @@
             let width = 0;
             
             // Simulate loading bar progress for 3-4 seconds
-            const interval = setInterval(function() {
+            const interval = setInterval(function() { // interval is a function that runs repeatedly
+                
                 if (width >= 100) {
-                    clearInterval(interval);
+                    clearInterval(interval); //ends the "looping" process kinda like break but it finish the code.
                     
                     // Hide loading bar and show results
                     document.getElementById("loadingBar").style.display = "none";
@@ -77,7 +78,7 @@
                     width++;
                     loadingBarInner.style.width = width + "%";
                 }
-            }, 20);  // Adjust this value for the duration (35ms for ~3.5 seconds)
+            }, 20);  // Adjust this value for the duration (20ms for ~2 seconds)
         };
     </script>
 </head>
