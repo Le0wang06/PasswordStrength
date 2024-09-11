@@ -35,6 +35,25 @@
             display: none;
         }
 
+        #button {
+
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 15px;
+            margin: 10px 4px;
+            cursor: pointer;
+            background-color: aquamarine;
+        }
+
+        #buttonText{
+            text-align: cneter;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
 
     </style>
 
@@ -63,10 +82,9 @@
             let width = 0;
             
             // Simulate loading bar progress for 3-4 seconds
-            const interval = setInterval(function() { // interval is a function that runs repeatedly
-                
+            const interval = setInterval(function() {
                 if (width >= 100) {
-                    clearInterval(interval); //ends the "looping" process kinda like break but it finish the code.
+                    clearInterval(interval);
                     
                     // Hide loading bar and show results
                     document.getElementById("loadingBar").style.display = "none";
@@ -78,21 +96,21 @@
                     width++;
                     loadingBarInner.style.width = width + "%";
                 }
-            }, 20);  // Adjust this value for the duration (20ms for ~2 seconds)
+            }, 20);  // Adjust this value for the duration (35ms for ~3.5 seconds)
         };
     </script>
 </head>
 <body>
-    <h1>Password Analysis Results</h1> 
+    <h1>Password Analysis Results</h1>
     <div id = "loadingBar">
         <div id="loadingBarInner"></div>
         <div id = "loadingText">Loading your password...</div>
     
     </div>
-    <div id = "results">     <!-- was initally hidden--> 
+    <div id = "results">    
         <div id="strength"></div>
         <div id="breachInfo"></div>
-        <a href="/">Try another password</a>
+        <div id = "button"> <a href="/" class="button_tryAgain" ><div id="buttonText"></div></a></button></div>
     </div>
 
 </body>
